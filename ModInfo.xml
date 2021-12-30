@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+	<ModInfo>
+		<Name value="Source UI" />
+		<Description value="This mod aims to implement a clean UI with added quality of life features while remaining close to the original game UI. Based on Origin UI." />
+		<Author value="Johtull" />
+		<Version value="0.20.0" />
+		<Website value="https://github.com/robertbrestle/7dtd-source-ui" />
+	</ModInfo>
+</xml>

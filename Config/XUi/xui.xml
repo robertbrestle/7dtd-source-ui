@@ -1,0 +1,32 @@
+<configs>
+	<!-- HUD Info Panel -->
+	<append xpath="/xui/ruleset[@name='default']/window_group[@name='compass']">
+		<window name="HUDInfoPanel" />
+	</append>
+
+	<!-- HUD Temperature Water Food -->
+	<append xpath="/xui/ruleset[@name='default']/window_group[@name='toolbelt']">
+		<window name="HUDTempWaterFood" />
+	</append>
+
+	<!-- HUD Bottom Bar -->
+	<!-- Disable default Food and Water bars -->
+	<remove xpath="/xui/ruleset[@name='default']/window_group[@name='toolbelt']/window[@name='windowToolbelt']"/>
+	<append xpath="/xui/ruleset[@name='default']/window_group[@name='toolbelt']">
+		<!-- Add default toolbelt window from Alpha 20 with vertical offset  -->
+		<window name="SOURCE_windowToolbelt" />
+		<window name="HUDBottomBar" />
+	</append>
+
+	<!-- Left HUD -->
+	<remove xpath="/xui/ruleset[@name='default']/window_group[@name='toolbelt']/window[@name='HUDLeftStatBars']"/>
+	<append xpath="/xui/ruleset[@name='default']/window_group[@name='toolbelt']">
+		<window name="ORGN_HUDLeftStatBars" anchor="LeftBottom" />
+	</append>
+
+	<!-- Window Compass -->
+	<remove xpath="/xui/ruleset[@name='default']/window_group[@name='compass']/window[@name='windowCompass']"/>
+	<append xpath="/xui/ruleset[@name='default']/window_group[@name='compass']">
+		<window name="ORGN_windowCompass" />
+	</append>
+</configs>

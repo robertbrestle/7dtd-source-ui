@@ -1,0 +1,195 @@
+<configs>
+	<!-- Prefer default ingameMenu -->
+	<!-- Any modifications to this should be added to the end of the following <append> block -->
+	<!-- <remove xpath="/windows/window[@name='ingameMenu']"/> -->
+
+	<append xpath="/windows">
+	
+		<!-- [NEW] HUDInfoPanel : Day, time, world temperature and elevation indicators (top left) -->
+		<window name="HUDInfoPanel" style="infopanel.window" controller="CompassWindow">
+			<texture name="compassTexture" /> <!-- Required by CompassWindow-controller and removing the element will cause an unexpected error during the startup -->
+			<rect pos="-9,-72" width="500" height="26"> <!-- Positioned down to negate the container window's placement -->
+				<!-- Day -->
+				<label depth="2" width="90" pos="0,-3" font_size="22" text="{daytitle}: [{daycolor|always}]{day|always}[-]" effect="outline" justify="center" /> <!-- YseGuy_changed from: text="{daytitle} {day|always}" -->
+
+				<!-- Time -->
+				<sprite depth="2" style="icon22px" pos="110,-2" sprite="ui_game_symbol_clock" />
+				<label depth="2" width="68" pos="132,-3" font_size="22" text="{time|always}" effect="outline" justify="center" />
+
+				<!-- World temperature -->
+				<sprite depth="2" style="icon22px" pos="220,-2" sprite="ui_game_symbol_cold" />
+				<label depth="2" width="68" pos="242,-3" font_size="22" text="{maptemperature}" effect="outline" justify="center" controller="MapStats" />
+
+				<!-- Elevation -->
+				<sprite depth="2" style="icon22px" pos="330,-2" sprite="ui_game_symbol_climb" />
+				<label depth="2" width="68" pos="352,-3" font_size="22" text="{mapelevation} M" effect="outline" justify="center" controller="MapStats" />
+
+				<!-- Wind -->
+				<!-- <sprite depth="2" style="icon22px" pos="440,-2" sprite="ui_game_symbol_wind" />
+				<label depth="2" width="68" pos="472,-3" font_size="22" text="{mapwind} MPH" effect="outline" justify="center" controller="MapStats" /> -->
+			</rect>
+		</window>
+
+
+		<!-- [NEW] HUDTempWaterFood : Feels like -temperature, water and food indicators (bottom left) -->
+		<window name="HUDTempWaterFood" style="tempwaterfood.window" controller="InGameHUD">
+
+			<grid name="hud" rows="1" cols="2" width="171" cell_width="89" cell_height="46" repeat_content="false">
+				<!-- Water -->
+				<rect width="81" height="43" controller="HUDStatBar" stat_type="Water" visible="{statvisible}"> <!-- YseGuy_comment: Red Eagle's fix in v1.07 of his HUD modlet doesn't contain visible="{statvisible}" anymore, but keeping it doesn't seem to make any difference, so I did not apply that change here -->
+					<sprite depth="1" name="border" color="0,0,0,150" height="43" type="sliced"/>
+					<sprite depth="2" name="background" color="64,64,64,100" type="sliced" />
+					<filledsprite depth="3" name="background" color="110,110,110,128" type="filled" fill="1" />
+					<filledsprite depth="4" name="BarContent" type="filled" color="52,137,167,192" fill="2" /> <!-- YseGuy_added -->
+					<!-- <sprite name="WaterFill" depth="4" type="filled" color="52,137,167,192" fill="{statfill}" /> YseGuy_commented out -->
+					<sprite depth="5" name="Icon" sprite="ui_game_symbol_water" size="22,22" pos="8,-11" foregroundlayer="true"/>
+					<label depth="6" name="TextContent" pos="35,-14" font_size="20" color="[white]" pivot="topleft" text="{statcurrent}%" height="30" effect="outline" />
+					<!-- <label name="TextContent" depth="7" pos="0,-7" text="{statcurrent}%" font_size="16" color="[white]" crispness="Never" effect="outline" effect_distance="1,1" justify="center" pivot="topleft" /> -->
+
+
+					<sprite depth="8" name="border" color="0,0,0,255" height="43" type="sliced" fillcenter="false"/>
+					<filledsprite depth="8" name="background" color="0,0,0,255" width="81" fillcenter="false" type="filled" fill="1" />
+					<filledsprite depth="3" name="background" color="0,0,0,255" width="80" fillcenter="false" type="filled" fill="1" />
+				</rect>
+
+				<!-- Food -->
+				<rect width="81" height="43" controller="HUDStatBar" stat_type="Food" visible="{statvisible}">
+					<sprite depth="1" name="border" color="0,0,0,150" height="43" type="sliced"/>
+				 	<sprite depth="2" name="background" color="64,64,64,100" type="sliced" />
+					<filledsprite depth="3" name="background" color="110,110,110,128" type="filled" fill="1" />
+					<!--<sprite depth="4" color="52,174,86" type="filled" fill="{playerfoodfill}" controller="HUDStatBar" />-->
+					<filledsprite depth="4" name="BarContent" type="filled" color="0,255,54,128" fill="2" />
+
+					<sprite depth="5" name="Icon" sprite="ui_game_symbol_fork" size="22,22" pos="8,-11" foregroundlayer="true"/>
+					<label depth="6" name="TextContent" pos="35,-14" font_size="20" color="[white]" pivot="topleft" text="{statcurrent}%" height="30" effect="outline" />
+					<sprite depth="8" name="border" color="0,0,0,255" height="43" type="sliced" fillcenter="false"/>
+					<filledsprite depth="8" name="background" color="0,0,0,255" width="81" fillcenter="false" type="filled" fill="1" />
+					<filledsprite depth="3" name="background" color="0,0,0,255" width="80" fillcenter="false" type="filled" fill="1" />
+				</rect>
+			</grid>
+		</window>
+
+
+		<!-- SOURCE_windowToolbelt: display default toolbelt with Food/Water bars disabled -->
+		<!--#$-IGS BEGIN: Adding cursor area. -$#-->
+		<window name="SOURCE_windowToolbelt" width="753" height="78" depth="5" anchor="CenterBottom" pos="-388, 84" backgroundcolor="[black]" controller="ToolbeltWindow" cursor_area="true" xp_fill_speed="2.5" >
+		<!--#$-IGS END.-$#-->
+			<rect>
+				<sprite depth="8" name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" on_press="true" />
+				
+				<rect pos="3,-3" controller="Toolbelt">
+					<grid depth="10" name="inventory" rows="1" cols="10" pos="0,0" cell_width="75" cell_height="75" repeat_content="true">
+						<item_stack name="0"/>
+					</grid>
+					<grid depth="10" name="inventory2" rows="1" cols="10" pos="0,82" cell_width="75" cell_height="75" repeat_content="true" visible="{secondrow}">
+						<item_stack name="0"/>
+					</grid>
+				</rect>
+
+				<sprite depth="1" pos="0,6" height="8" color="[mediumGrey]" sprite="menu_empty2px" globalopacity="false" type="sliced" />
+				<sprite depth="9" pos="0,6" height="8" color="[black]" sprite="menu_empty2px" globalopacity="false" type="sliced" fillcenter="false" />
+				<sprite depth="4" pos="0,6" height="8" width="750" color="{xpcolor}" globalopacity="false" type="filled" fill="{xp}" />
+
+				<!-- Removed Food/Water HUD -->
+				<!-- see the default Config/XUi/windows.xml for missing section -->
+			</rect>
+		</window>
+
+
+		<!-- HUDBottomBar: Player level indicator and toolbelt numbers (bottom center) -->
+		<window name="HUDBottomBar" style="botbar.window" controller="ToolbeltWindow" visible="{ToolbeltVisible}" >
+			<!-- Icon coupled with player level -->
+			<rect pos="-95,-58" width="32" height="32" >
+				<sprite depth="3" name="windowIcon" width="32" height="32" pos="-32,0" sprite="ui_game_symbol_trophy" />
+				<label depth="4" name="levelNumber" pos="0,-4" width="48" height="28" text="{cvar($LastPlayerLevel)}" color="255,255,255,255" justify="center" controller="HUDStatBar" effect="outline" />
+			</rect>
+			
+			<!-- Display player game/loot stage -->
+			<!-- TODO: find proper controller to access this information? -->
+			<!--
+			<rect pos="-95,-26" width="32" height="32" >
+				<sprite depth="3" name="windowIcon" width="32" height="32" pos="-32,0" sprite="ui_game_symbol_trophy" />
+				<label depth="4" name="levelNumber" pos="0,-4" width="48" height="28" text="{cvar($LootGameStage)}" color="255,255,255,255" justify="center" controller="HUDStatBar" effect="outline" />
+			-->
+				<!--
+				<sprite depth="3" name="windowIcon" width="32" height="32" pos="0,0" sprite="ui_game_symbol_trophy" />
+				<label depth="4" name="levelNumber" pos="2,-35" width="28" height="28" text="{cvar($LastPlayerLevel)}" color="255,255,255,255" justify="center" controller="HUDStatBar" effect="outline" />
+				-->
+			<!-- </rect> -->
+
+			<!-- Toolbelt numbers -->
+			<grid depth="1" rows="1" cols="10" pos="6,-20" cell_width="75" cell_height="75" repeat_content="false">
+				<label depth="50" width="12" height="22" text="1" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="2" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="3" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="4" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="5" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="6" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="7" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="8" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="9" font_size="22" effect="outline" color="[white]" justify="center" />
+				<label depth="50" width="12" height="22" text="0" font_size="22" effect="outline" color="[white]" justify="center" />
+			</grid>
+		</window>
+		
+		
+		<!-- ORGN_HUDLeftStatBars: left stat bars -->
+		<!-- TODO: remediate? -->
+		<window name="ORGN_HUDLeftStatBars">
+			<rect name="hud" pos="9,243" rows="2" cols="1" width="171" cell_width="171" cell_height="48" side="left">
+				<rect width="170" height="43" pos="0,-45" controller="HUDStatBar" stat_type="Stealth" visible="{statvisible}">
+					<sprite depth="1" name="border" color="0,0,0,150" height="43" type="sliced" />
+					<sprite depth="2" name="background" color="0,0,0,140" type="sliced" />
+					<filledsprite depth="3" name="background" color="110,110,110,128" type="filled" fill="1" />
+					<filledsprite depth="4" name="BarContent" color="{stealthcolor}" type="filled" fill="0" />
+					<sprite depth="5" name="Icon" atlas="{staticonatlas|once}" sprite="{staticon|once}" size="32,32" pos="8,-6" foregroundlayer="true"/>
+					<label depth="6" name="TextContent" pos="0,-8" font_size="28" color="[white]" justify="center" pivot="topleft" text="{statcurrent}" height="30" effect="outline" /> <!-- 3) added: effect="outline" -->
+					<sprite depth="8" name="border" color="0,0,0,255" height="43" type="sliced" fillcenter="false"/>
+					<filledsprite depth="8" name="background" color="0,0,0,255" width="170" fillcenter="false" type="filled" fill="1" />
+					<filledsprite depth="3" name="background" color="0,0,0,255" width="169" fillcenter="false" type="filled" fill="1" />
+				</rect>
+
+				<rect width="170" height="43" pos="0,-143" controller="HUDStatBar" stat_type="Stamina" visible="{statvisible}">
+					<sprite depth="1" name="border" color="0,0,0,128" height="43" type="sliced"/>
+					<sprite depth="2" name="background" color="0,0,0,140" type="sliced" />
+					<filledsprite depth="3" name="background" color="110,110,110,128" width="169" type="filled" fill="{statmodifiedmax}" />
+					<filledsprite depth="5" name="BarContent" color="0,54,255,128" width="169" type="filled" fill="0"  />
+					<sprite depth="6" name="Icon" atlas="{staticonatlas|once}" sprite="ui_game_symbol_agility" size="32,32" pos="8,-6" foregroundlayer="true"/>
+					<label depth="7" name="TextContent" pos="0,-8" font_size="28" color="[white]" justify="center" pivot="topleft" text="{statcurrentwithmax}" height="30" effect="outline" /> <!-- 5) added: effect="outline" -->
+					<sprite depth="8" name="border" color="0,0,0,255" height="43" type="sliced" fillcenter="false"/>
+					<filledsprite depth="8" name="background" color="0,0,0,255" width="170" fillcenter="false" type="filled" fill="{statmodifiedmax}" />
+					<filledsprite depth="3" name="background" color="0,0,0,255" width="169" fillcenter="false" type="filled" fill="{statmodifiedmax}" />
+				</rect>
+
+				<rect width="170" height="43" pos="0,-191" controller="HUDStatBar" stat_type="Health" visible="{statvisible}">
+					<sprite depth="1" name="border" color="0,0,0,128" height="43" type="sliced"/>
+					<sprite depth="2" name="background" color="0,0,0,140" type="sliced" />
+					<filledsprite depth="3" name="background" color="110,110,110,128" width="169" type="filled" fill="{statmodifiedmax}" />
+					<filledsprite depth="5" name="BarContent" color="255,0,0,128" width="169" type="filled" fill="0" />
+					<sprite depth="6" name="Icon" atlas="{staticonatlas|once}" sprite="{staticon|once}" size="32,32" pos="8,-6" foregroundlayer="true"/>
+					<label depth="7" name="TextContent" pos="0,-8" font_size="28" color="[white]" justify="center" pivot="topleft" text="{statcurrentwithmax}" height="30" effect="outline" /> <!-- 7) added: effect="outline" -->
+					<sprite depth="8" name="border" color="0,0,0,255" height="43" type="sliced" fillcenter="false"/>
+					<filledsprite depth="8" name="background" color="0,0,0,255" width="170" fillcenter="false" type="filled" fill="{statmodifiedmax}" />
+					<filledsprite depth="3" name="background" color="0,0,0,255" width="169" fillcenter="false" type="filled" fill="{statmodifiedmax}" />
+				</rect>
+			</rect>
+
+			<rect name="hud" pos="90,168" side="left" controller="BuffPopoutList" pivot="BottomLeft" >
+				<panel width="170" height="43" name="item" visible="false" pivot="right" disableautobackground="true" pos="70, 0" sound="[recipe_click]" on_hover="true" >
+					<sprite depth="3" pos="0,0"  name="Background" sprite="ui_game_popup" height="43" width="162" pivot="center" flip="Horizontally" color="[transparent]" />
+					<sprite depth="4" name="Icon" size="36,32" pos="-58,0" pivot="center" color="[transparent]"/>
+					<label depth="6" name="TextContent" pos="0,0" font_size="28" color="[white]" justify="center" height="30" pivot="center"/>
+				</panel>
+			</rect>
+		</window>
+
+
+		<!-- ORGN_windowCompass: Compass (top center) -->
+		<window name="ORGN_windowCompass" anchor="CenterTop" pos="-240,-9" width="480" height="43" controller="CompassWindow">
+			<sprite depth="0" sprite="ui_game_header_fill" pos="47,0" width="386" height="43" type="sliced" color="150,150,150,150" />
+			<sprite depth="1" sprite="ui_game_header_fill" pos="50,-3" width="380" height="37" type="sliced" color="40,40,40,220" />
+			<sprite depth="11" pos="239,0" width="1" color="[white]" type="sliced" />
+			<texture depth="8" texture="Textures/UI/Compass/overlay-{gamelanguage}" pos="50, -12" width="380" height="27" color="[iconColor]" name="compassTexture3" rect_size="0.25,1" rect_offset="{#compass_rotation / 360 + 0.0625 - 0.125},0" />
+		</window>
+	</append>
+</configs>
